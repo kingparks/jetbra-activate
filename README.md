@@ -1,4 +1,5 @@
 ### Jetbra Active [idea激活]
+
 Jetbra Active is a JetBrains IDE activation tool that helps you quickly activate JetBrains IDE.
 
 > This activation method is compatible with all JetBrains software, such as IntelliJ IDEA, AppCode, CLion, DataGrip, GoLand, PhpStorm, PyCharm, Rider, RubyMine, and WebStorm. It also supports Windows, Mac, and Linux platforms. This activation method supports account login, online updates, cross-platform functionality, and the latest version (genuine activation)
