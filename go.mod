@@ -1,4 +1,4 @@
-module github.com/kingparks/jetbra-active
+module github.com/kingparks/jetbra-activate
 
 go 1.21.5
 

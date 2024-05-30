@@ -1,4 +1,4 @@
-### Jetbra Active [idea激活]
+### Jetbra Activate [idea激活]
 
 Jetbra Active is a JetBrains IDE activation tool that helps you quickly activate JetBrains IDE.
 
@@ -21,7 +21,7 @@ Open the terminal on MacOS/Linux; Open Git Bash on Windows. Then execute the fol
 
 * Install via go install [通过 go install 安装方式]
 ```shell
-go run github.com/kingparks/jetbra-active@latest;
+go run github.com/kingparks/jetbra-activate@latest;
 ```
 
 * Install via direct download binary (use this way, some computers may report false positives, need to close the antivirus software/computer housekeeper/security protection and then proceed)
