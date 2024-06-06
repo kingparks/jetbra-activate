@@ -1,19 +1,9 @@
 ### Jetbra Activate [idea激活]
 
 Jetbra Active is a JetBrains IDE activation tool that helps you quickly activate JetBrains IDE.
-
-> This activation method is compatible with all JetBrains software, such as IntelliJ IDEA, AppCode, CLion, DataGrip, GoLand, PhpStorm, PyCharm, Rider, RubyMine, and WebStorm. It also supports Windows, Mac, and Linux platforms. This activation method supports account login, online updates, cross-platform functionality, and the latest version (genuine activation)
-
-![img_7.png](./img/img.png)
-
 [Jetbra Active 是一个 JetBrains IDE 激活工具，可以帮助你快速激活 JetBrains IDE]
 
-> [适用于IDEs全系列软件，如：IntelliJ IDEA、AppCode、CLion、DataGrip、GoLand、PhpStorm、PyCharm、Rider、RubyMine、WebStorm，当然也适用Windows/Mac/Linux平台。 此激活方法支持登录账号，支持在线更新，支持跨平台，支持最新版(正版激活)]
-
-![img_7.png](./img/img_2.png)
-
-
-### Installation Steps [安装步骤]
+### Usage [使用方式]
 
 Open the terminal on MacOS/Linux; Open Git Bash on Windows. Then execute the following command to install:
 
@@ -29,3 +19,14 @@ go run github.com/kingparks/jetbra-activate@latest;
 ```shell
 bash <(curl http://string.jeter.eu.org/app/install.sh);
 ```
+
+> This activation method is compatible with all JetBrains software, such as IntelliJ IDEA, AppCode, CLion, DataGrip, GoLand, PhpStorm, PyCharm, Rider, RubyMine, and WebStorm. It also supports Windows, Mac, and Linux platforms. This activation method supports account login, online updates, cross-platform functionality, and the latest version (genuine activation)
+
+![img_7.png](./img/img.png)
+
+
+> [适用于IDEs全系列软件，如：IntelliJ IDEA、AppCode、CLion、DataGrip、GoLand、PhpStorm、PyCharm、Rider、RubyMine、WebStorm，当然也适用Windows/Mac/Linux平台。 此激活方法支持登录账号，支持在线更新，支持跨平台，支持最新版(正版激活)]
+
+![img_7.png](./img/img_2.png)
+
+
