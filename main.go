@@ -4,25 +4,23 @@ import (
 	"crypto/md5"
 	"embed"
 	"fmt"
-	"github.com/astaxie/beego/httplib"
 	"github.com/atotto/clipboard"
-	"github.com/tidwall/gjson"
 	"howett.net/plist"
 	"log"
 	"net"
-	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
 	"runtime"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/unknwon/i18n"
 )
 
-var version = 212
+var version = 213
 
-var hosts = []string{"http://string.jeter.eu.org", "http://string.eiyou.fun", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
+var hosts = []string{"http://string.eiyou.fun", "http://string.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
 var githubPath = "https://mirror.ghproxy.com/https://github.com/kingparks/jetbra-activate/releases/download/latest/"
 var err error
@@ -34,105 +32,73 @@ var dGreen = "\033[4;32m%s\033[0m\n"
 var red = "\033[31m%s\033[0m\n"
 var defaultColor = "%s"
 var lang, _ = getLocale()
+var client = Client{Hosts: hosts}
 
 //go:embed all:script
 var scriptFS embed.FS
 
+type Tr struct {
+	i18n.Locale
+}
+
+var tr *Tr
+
 func main() {
-	setProxy()
+	_ = i18n.SetMessage("en-US", "locales/en.ini")
 	switch lang {
 	case "zh":
-		fmt.Printf(green, `IntelliJ 授权 v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
+		tr = &Tr{Locale: i18n.Locale{Lang: "zh-CN"}}
 	default:
-		fmt.Printf(green, `IntelliJ Activate v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
+		tr = &Tr{Locale: i18n.Locale{Lang: "en-US"}}
 	}
-	checkHost()
+	fmt.Printf(green, tr.Tr("IntelliJ 授权")+` v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
+	client.SetProxy(lang)
 	deviceID := getMacMD5()
-	switch lang {
-	case "zh":
-		fmt.Printf(green, "设备码: "+deviceID)
-	default:
-		fmt.Printf(green, "Device ID: "+deviceID)
+	sCount, sPayCount, isPay, _, exp := client.GetMyInfo(deviceID)
+	fmt.Printf(green, tr.Tr("设备码")+":"+deviceID)
+	expTime, _ := time.ParseInLocation("2006-01-02 15:04:05", exp, time.Local)
+	if isPay == "1" || expTime.After(time.Now()) {
+		fmt.Printf(green, tr.Tr("付费到期时间")+":"+exp)
 	}
+	fmt.Printf("\033[32m%s\033[0m\u001B[1;32m %s \u001B[0m\033[32m%s\033[0m\u001B[1;32m %s \u001B[0m\u001B[32m%s\u001B[0m\n",
+		tr.Tr("推广命令：(已推广"), sCount, tr.Tr("人,推广已付费"), sPayCount, tr.Tr("人；每推广10人或推广付费2人可获得一年授权)"))
+	fmt.Printf(hGreen, "bash <(curl "+githubPath+"install.sh) "+deviceID+"\n")
+
 	printAD()
 	checkUpdate(version)
 	fmt.Println()
-	switch lang {
-	case "zh":
-		fmt.Printf(defaultColor, "选择要授权的产品：")
-	default:
-		fmt.Printf(defaultColor, "Choose the product to authorize: ")
-	}
+	fmt.Printf(defaultColor, tr.Tr("选择要授权的产品："))
 	jbProduct := []string{"IntelliJ IDEA", "CLion", "PhpStorm", "Goland", "PyCharm", "WebStorm", "Rider", "DataGrip", "DataSpell"}
 	jbProductChoice := []string{"idea", "clion", "phpstorm", "goland", "pycharm", "webstorm", "rider", "datagrip", "dataspell"}
 	for i, v := range jbProduct {
 		fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
 	}
 	fmt.Println()
-	switch lang {
-	case "zh":
-		fmt.Print("请输入产品编号（直接回车默认为1）：")
-	default:
-		fmt.Print("Please enter the product number (press Enter directly to default to 1): ")
-	}
+	fmt.Print(tr.Tr("请输入产品编号（直接回车默认为1）："))
 	productIndex := 1
 	_, _ = fmt.Scanln(&productIndex)
 	if productIndex < 1 || productIndex > len(jbProduct) {
-		switch lang {
-		case "zh":
-			fmt.Println("输入有误")
-		default:
-			fmt.Println("Input error")
-		}
+		fmt.Println(tr.Tr("输入有误"))
 		return
 	}
-	switch lang {
-	case "zh":
-		fmt.Println("选择的产品为：" + jbProduct[productIndex-1])
-	default:
-		fmt.Println("Selected product：" + jbProduct[productIndex-1])
-	}
+	fmt.Println(tr.Tr("选择的产品为：") + jbProduct[productIndex-1])
 	fmt.Println()
-	switch lang {
-	case "zh":
-		fmt.Printf(defaultColor, "选择有效期：")
-	default:
-		fmt.Printf(defaultColor, "Choose the validity period: ")
-	}
-	jbPeriod := []string{"两天(免费)", "一年(赠送)"}
-	switch lang {
-	case "zh":
-	default:
-		jbPeriod = []string{"Two days (free)", "One year (gift)"}
-	}
+	fmt.Printf(defaultColor, tr.Tr("选择有效期："))
+
+	jbPeriod := []string{tr.Tr("两天(免费)"), tr.Tr("一年(购买)")}
 	for i, v := range jbPeriod {
 		fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
 	}
 	fmt.Println()
-	switch lang {
-	case "zh":
-		fmt.Printf("%s", "请输入有效期编号（直接回车默认为1）：")
-	default:
-		fmt.Printf("%s", "Please enter the validity period number (press Enter directly to default to 1): ")
-	}
+	fmt.Printf("%s", tr.Tr("请输入有效期编号（直接回车默认为1）："))
+
 	periodIndex := 1
 	_, _ = fmt.Scanln(&periodIndex)
 	if periodIndex < 1 || periodIndex > len(jbPeriod) {
-		switch lang {
-		case "zh":
-			fmt.Println("输入有误")
-		default:
-			fmt.Println("Input error")
-		}
+		fmt.Println(tr.Tr("输入有误"))
 		return
 	}
-	switch lang {
-	case "zh":
-		fmt.Println("选择的有效期为：" + jbPeriod[periodIndex-1])
-	default:
-		fmt.Println("Selected validity period：" + jbPeriod[periodIndex-1])
-	}
-
+	fmt.Println(tr.Tr("选择的有效期为：") + jbPeriod[periodIndex-1])
 	fmt.Println()
 	lic := ""
 	for i := 0; i < 50; i++ {
@@ -150,7 +116,7 @@ func main() {
 
 	switch periodIndex {
 	case 1:
-		isOk, result := getLic(jbProductChoice[productIndex-1], periodIndex-1)
+		isOk, result := client.GetLic(jbProductChoice[productIndex-1], periodIndex-1)
 		if !isOk {
 			fmt.Printf(red, result)
 			return
@@ -161,49 +127,42 @@ func main() {
 		if lic != "" {
 			goto Process
 		}
-		switch lang {
-		case "zh":
-			fmt.Println("该项目由捐赠字符串藏品后赠送，捐赠获取藏品地址：")
-			fmt.Printf(dGreen, host)
-			fmt.Println("请输入字符串藏品元数据：")
-		default:
-			fmt.Println("This project is donated by the string collection and then given away. The donation address of the collection is: ")
-			fmt.Printf(dGreen, host)
-			fmt.Println("Please enter the string collection metadata: ")
-		}
-		var ticket string
-		_, _ = fmt.Scanln(&ticket)
-		if ticket == "" {
-			switch lang {
-			case "zh":
-				fmt.Printf(red, "输入有误")
-			default:
-				fmt.Printf(red, "Input error")
+		// 没到期
+		if expTime.After(time.Now()) {
+			isOk, result := client.GetLic(jbProductChoice[productIndex-1], periodIndex-1)
+			if !isOk {
+				fmt.Printf(red, result)
+				return
 			}
-			return
+			lic = result
+			// 保存到本地
+			WriteLic(jbProductChoice[productIndex-1], lic)
+			fmt.Println()
+			goto Process
 		}
-		ticket = strings.TrimSpace(ticket)
-		ticket = strings.ReplaceAll(ticket, "https://idea.eiyou.fun/", "")
-		ticket = strings.ReplaceAll(ticket, "http://idea.eiyou.fun/", "")
-		ticket = strings.ReplaceAll(ticket, "https://idea.jeter.eu.org/", "")
-		ticket = strings.ReplaceAll(ticket, "http://idea.jeter.eu.org/", "")
-		ticket = strings.ReplaceAll(ticket, "/", "")
-		// 检查是否捐赠
-		res, err := httplib.Get(host + "/check?ticket=" + ticket + "&device=" + deviceID).String()
-		if err != nil {
-			fmt.Printf(red, err.Error())
-			return
+		// 到期了
+		payUrl, orderID := client.GetPayUrl()
+		isCopyText := ""
+		errClip := clipboard.WriteAll(payUrl)
+		if errClip == nil {
+			isCopyText = tr.Tr("（已复制到剪贴板）")
 		}
-		if gjson.Get(res, "code").Int() != 0 {
-			fmt.Printf(red, gjson.Get(res, "msg").String())
-			return
+		fmt.Println(tr.Tr("使用浏览器打开下面地址进行捐赠") + isCopyText)
+		fmt.Printf(dGreen, payUrl)
+		fmt.Println(tr.Tr("捐赠完成后请回车"))
+		//检测控制台回车
+	checkPay:
+		_, _ = fmt.Scanln()
+		isPay := client.PayCheck(orderID, deviceID)
+		if !isPay {
+			fmt.Println(tr.Tr("未捐赠,请捐赠完成后回车"))
+			goto checkPay
 		}
-		isOk, result := getLic(jbProductChoice[productIndex-1], periodIndex-1)
+		isOk, result := client.GetLic(jbProductChoice[productIndex-1], periodIndex-1)
 		if !isOk {
 			fmt.Printf(red, result)
 			return
 		}
-		lic = result
 		// 保存到本地
 		WriteLic(jbProductChoice[productIndex-1], lic)
 		fmt.Println()
@@ -213,19 +172,9 @@ Process:
 	isCopyText := ""
 	err = clipboard.WriteAll(lic)
 	if err == nil {
-		switch lang {
-		case "zh":
-			isCopyText = "（已复制到剪贴板）"
-		default:
-			isCopyText = "（Copied to clipboard）"
-		}
+		isCopyText = tr.Tr("（已复制到剪贴板）")
 	}
-	switch lang {
-	case "zh":
-		fmt.Printf(yellow, "首次执行请重启IDE，然后填入下面授权码；非首次执行直接填入下面授权码即可"+isCopyText)
-	default:
-		fmt.Printf(yellow, "For the first execution, please restart the IDE, then fill in the authorization code below; for non-first time execution, fill in the authorization code directly"+isCopyText)
-	}
+	fmt.Printf(yellow, tr.Tr("首次执行请重启IDE，然后填入下面授权码；非首次执行直接填入下面授权码即可")+isCopyText)
 	fmt.Println()
 	fmt.Printf(hGreen, lic)
 	fmt.Println()
@@ -249,120 +198,44 @@ func getMacMD5() string {
 }
 
 func printAD() {
-	res, err := httplib.Get(host + "/ad").String()
-	if err != nil {
+	ad := client.GetAD()
+	if len(ad) == 0 {
 		return
 	}
-	if len(res) == 0 {
-		return
-	}
-	fmt.Printf(yellow, res)
+	fmt.Printf(yellow, ad)
 }
 
 func checkUpdate(version int) {
-	res, err := httplib.Get(host + "/version?version=" + fmt.Sprint(version) + "&plat=" + runtime.GOOS + "_" + runtime.GOARCH).String()
-	if err != nil {
-		switch lang {
-		case "zh":
-			fmt.Printf(red, "网络错误！\n"+err.Error())
-			fmt.Printf(red, "排除网络问题后，仍存在问题的话可尝试下载新版本:\n")
-		default:
-			fmt.Printf(red, "Network error！\n"+err.Error())
-			fmt.Printf(red, "If there is still a problem after excluding the network problem, you can try to download the new version:\n")
-		}
-		fmt.Printf(dGreen, githubPath+"jetbra_"+runtime.GOOS+"_"+runtime.GOARCH)
-		os.Exit(0)
-		return
-	}
-	upUrl := gjson.Get(res, "url").String()
+	upUrl := client.CheckVersion(fmt.Sprint(version))
 	if upUrl != "" {
-		switch lang {
-		case "zh":
-			fmt.Printf(red, "有新版本可用，尝试自动更新中，若失败，请输入下面命令并回车手动更新程序:\n")
-		default:
-			fmt.Printf(red, "There is a new version available, trying to update automatically. If it fails, please enter the following command and press Enter to update the program manually:\n")
-		}
-		fmt.Println(`bash -c "$(curl -fsSL ` + host + `/app/install.sh)"`)
-		cmd := exec.Command("bash", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %s/app/install.sh)"`, host))
+		fmt.Printf(red, tr.Tr("有新版本可用，尝试自动更新中，若失败，请输入下面命令并回车手动更新程序："))
+		fmt.Println()
+		fmt.Println(`bash -c "$(curl -fsSL ` + githubPath + `install.sh)"`)
+		cmd := exec.Command("bash", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
 		err := cmd.Run()
 		if err != nil {
 			log.Fatal(err)
 		}
-		switch lang {
-		case "zh":
-			fmt.Println("更新完成，重新运行程序即可")
-		default:
-			fmt.Println("Update completed, just run the program again")
-		}
+		fmt.Println(tr.Tr("更新完成，重新运行程序即可"))
 		os.Exit(0)
 		return
 	}
 }
 
-func setProxy() {
-	lang经由 := "经由"
-	lang代理访问 := "代理访问 "
-	switch lang {
-	case "zh":
-	default:
-		lang经由 = "via"
-		lang代理访问 = "proxy access "
+// 获取推广人
+func getPromotion() string {
+	b, e := os.ReadFile(os.Getenv("HOME") + "/.jetbrarc")
+	if e != nil {
+		fmt.Printf(red, e)
+		return ""
 	}
-	httplib.SetDefaultSetting(httplib.BeegoHTTPSettings{
-		ReadWriteTimeout: 30 * time.Second,
-		ConnectTimeout:   30 * time.Second,
-		Gzip:             true,
-		DumpBody:         true,
-		UserAgent:        lang,
-	})
-	if os.Getenv("http_proxy") != "" {
-		httplib.SetDefaultSetting(httplib.BeegoHTTPSettings{
-			Proxy: func(request *http.Request) (*url.URL, error) {
-				return url.Parse(os.Getenv("http_proxy"))
-			},
-			ReadWriteTimeout: 30 * time.Second,
-			ConnectTimeout:   30 * time.Second,
-			Gzip:             true,
-			DumpBody:         true,
-			UserAgent:        lang,
-		})
-		fmt.Printf(yellow, lang经由+" http_proxy "+lang代理访问+os.Getenv("http_proxy"))
-		return
-	}
-	if os.Getenv("https_proxy") != "" {
-		httplib.SetDefaultSetting(httplib.BeegoHTTPSettings{
-			Proxy: func(request *http.Request) (*url.URL, error) {
-				return url.Parse(os.Getenv("https_proxy"))
-			},
-			ReadWriteTimeout: 30 * time.Second,
-			ConnectTimeout:   30 * time.Second,
-			Gzip:             true,
-			DumpBody:         true,
-			UserAgent:        lang,
-		})
-		fmt.Printf(yellow, lang经由+" https_proxy "+lang代理访问+os.Getenv("https_proxy"))
-		return
-	}
-	if os.Getenv("all_proxy") != "" {
-		httplib.SetDefaultSetting(httplib.BeegoHTTPSettings{
-			Proxy: func(request *http.Request) (*url.URL, error) {
-				return url.Parse(os.Getenv("all_proxy"))
-			},
-			ReadWriteTimeout: 30 * time.Second,
-			ConnectTimeout:   30 * time.Second,
-			Gzip:             true,
-			DumpBody:         true,
-			UserAgent:        lang,
-		})
-		fmt.Printf(yellow, lang经由+" all_proxy "+lang代理访问+os.Getenv("all_proxy"))
-		return
-	}
+	return strings.ReplaceAll(string(b), "\n", "")
 }
 
-func getLocale() (lang, loc string) {
+func getLocale() (langRes, locRes string) {
 	osHost := runtime.GOOS
-	defaultLang := "en"
-	defaultLoc := "US"
+	langRes = "en"
+	locRes = "US"
 	switch osHost {
 	case "windows":
 		// Exec powershell Get-Culture on Windows.
@@ -371,10 +244,10 @@ func getLocale() (lang, loc string) {
 		if err == nil {
 			langLocRaw := strings.TrimSpace(string(output))
 			langLoc := strings.Split(langLocRaw, "-")
-			lang := langLoc[0]
-			lang = strings.Split(lang, "-")[0]
-			loc := langLoc[1]
-			return lang, loc
+			langRes = langLoc[0]
+			langRes = strings.Split(langRes, "-")[0]
+			locRes = langLoc[1]
+			return
 		}
 	case "darwin":
 		// Exec shell Get-Culture on MacOS.
@@ -383,13 +256,13 @@ func getLocale() (lang, loc string) {
 		if err == nil {
 			langLocRaw := strings.TrimSpace(string(output))
 			langLoc := strings.Split(langLocRaw, "_")
-			lang := langLoc[0]
-			lang = strings.Split(lang, "-")[0]
+			langRes = langLoc[0]
+			langRes = strings.Split(langRes, "-")[0]
 			if len(langLoc) == 1 {
-				return lang, defaultLoc
+				return
 			}
-			loc := langLoc[1]
-			return lang, loc
+			locRes = langLoc[1]
+			return
 		}
 		plistB, err := os.ReadFile(os.Getenv("HOME") + "/Library/Preferences/.GlobalPreferences.plist")
 		if err != nil {
@@ -402,68 +275,39 @@ func getLocale() (lang, loc string) {
 		}
 		langLocRaw := a["AppleLocale"].(string)
 		langLoc := strings.Split(langLocRaw, "_")
-		lang := langLoc[0]
-		lang = strings.Split(lang, "-")[0]
+		langRes = langLoc[0]
+		langRes = strings.Split(langRes, "-")[0]
 		if len(langLoc) == 1 {
-			return lang, defaultLoc
+			return
 		}
-		loc := langLoc[1]
-		return lang, loc
+		locRes = langLoc[1]
+		return
 	case "linux":
 		envlang, ok := os.LookupEnv("LANG")
 		if ok {
 			langLocRaw := strings.TrimSpace(envlang)
 			langLocRaw = strings.Split(envlang, ".")[0]
 			langLoc := strings.Split(langLocRaw, "_")
-			lang := langLoc[0]
-			lang = strings.Split(lang, "-")[0]
+			langRes = langLoc[0]
+			langRes = strings.Split(langRes, "-")[0]
 			if len(langLoc) == 1 {
-				return lang, defaultLoc
+				return
 			}
-			loc := langLoc[1]
-			return lang, loc
-		}
-	}
-	if lang == "" {
-		langLocRaw := os.Getenv("LC_CTYPE")
-		langLocRaw = strings.Split(langLocRaw, ".")[0]
-		langLoc := strings.Split(langLocRaw, "_")
-		lang := langLoc[0]
-		lang = strings.Split(lang, "-")[0]
-		if len(langLoc) == 1 {
-			return lang, defaultLoc
-		}
-		loc := langLoc[1]
-		return lang, loc
-	}
-	return defaultLang, defaultLoc
-}
-
-func checkHost() {
-	for _, v := range hosts {
-		_, err := httplib.Get(v).SetTimeout(4*time.Second, 4*time.Second).String()
-		if err == nil {
-			host = v
+			locRes = langLoc[1]
 			return
 		}
 	}
-}
-
-func getLic(product string, dur int) (isOk bool, result string) {
-	req := httplib.Get(host + "/getLic?device=" + getMacMD5() + "&dur=" + fmt.Sprint(dur) + "&product=" + product)
-	res, err := req.String()
-	if err != nil {
-		isOk = false
-		result = err.Error()
+	if langRes == "" {
+		langLocRaw := os.Getenv("LC_CTYPE")
+		langLocRaw = strings.Split(langLocRaw, ".")[0]
+		langLoc := strings.Split(langLocRaw, "_")
+		langRes = langLoc[0]
+		langRes = strings.Split(langRes, "-")[0]
+		if len(langLoc) == 1 {
+			return
+		}
+		locRes = langLoc[1]
 		return
 	}
-	code := gjson.Get(res, "code").Int()
-	msg := gjson.Get(res, "msg").String()
-	result = msg
-	if code != 0 {
-		isOk = false
-		return
-	}
-	isOk = true
 	return
 }
