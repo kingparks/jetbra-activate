@@ -224,9 +224,13 @@ func checkUpdate(version int) {
 
 // 获取推广人
 func getPromotion() string {
-	b, e := os.ReadFile(os.Getenv("HOME") + "/.jetbrarc")
+	home := os.Getenv("HOME")
+	if home == "" {
+		home = os.Getenv("USERPROFILE")
+	}
+	b, e := os.ReadFile(home + "/.jetbrarc")
 	if e != nil {
-		fmt.Printf(red, e)
+		//fmt.Printf(red, e)
 		return ""
 	}
 	return strings.ReplaceAll(string(b), "\n", "")

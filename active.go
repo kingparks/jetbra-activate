@@ -94,7 +94,7 @@ func Active(software string) {
 	var toolBoxDir []string
 	switch runtime.GOOS {
 	case "windows":
-		toolBoxDir = append(toolBoxDir, os.Getenv("HOME")+"/AppData/Local/JetBrains/Toolbox/apps")
+		toolBoxDir = append(toolBoxDir, os.Getenv("USERPROFILE")+"/AppData/Local/JetBrains/Toolbox/apps")
 		toolBoxDir = append(toolBoxDir, "C:/Program Files/Toolbox/apps")
 		toolBoxDir = append(toolBoxDir, "D:/Program Files/Toolbox/apps")
 		toolBoxDir = append(toolBoxDir, "E:/Program Files/Toolbox/apps")
@@ -140,7 +140,7 @@ func Active(software string) {
 	var dir2019 string
 	switch runtime.GOOS {
 	case "windows":
-		dir2019 = os.Getenv("HOME")
+		dir2019 = os.Getenv("USERPROFILE")
 	case "darwin":
 		dir2019 = os.Getenv("HOME") + "/Library/Preferences"
 	case "linux":
