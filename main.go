@@ -18,7 +18,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 213
+var version = 214
 
 var hosts = []string{"http://string.eiyou.fun", "http://string.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -211,7 +211,16 @@ func checkUpdate(version int) {
 		fmt.Printf(red, tr.Tr("有新版本可用，尝试自动更新中，若失败，请输入下面命令并回车手动更新程序："))
 		fmt.Println()
 		fmt.Println(`bash -c "$(curl -fsSL ` + githubPath + `install.sh)"`)
-		cmd := exec.Command("bash", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
+		var cmd *exec.Cmd
+
+		switch runtime.GOOS {
+		case "windows":
+			// 在 Windows 上，你可以使用 PowerShell 来下载和执行脚本
+			cmd = exec.Command("powershell", "-Command", fmt.Sprintf(`iwr -useb %sinstall.ps1 | iex`, githubPath))
+		default:
+			// 在 Unix-like 系统上，你可以使用 bash 来下载和执行脚本
+			cmd = exec.Command("bash", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
+		}
 		err := cmd.Run()
 		if err != nil {
 			log.Fatal(err)
