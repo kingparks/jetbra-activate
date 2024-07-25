@@ -212,13 +212,9 @@ func checkUpdate(version int) {
 		fmt.Println()
 		fmt.Println(`bash -c "$(curl -fsSL ` + githubPath + `install.sh)"`)
 		var cmd *exec.Cmd
-
-		switch runtime.GOOS {
-		case "windows":
-			// 在 Windows 上，你可以使用 PowerShell 来下载和执行脚本
-			cmd = exec.Command("powershell", "-Command", fmt.Sprintf(`iwr -useb %sinstall.ps1 | iex`, githubPath))
-		default:
-			// 在 Unix-like 系统上，你可以使用 bash 来下载和执行脚本
+		if strings.Contains(strings.ToLower(os.Getenv("ComSpec")), "cmd.exe") {
+			cmd = exec.Command("C:\\Program Files\\Git\\git-bash.exe", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
+		} else {
 			cmd = exec.Command("bash", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
 		}
 		err := cmd.Run()
