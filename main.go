@@ -18,7 +18,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 214
+var version = 216
 
 var hosts = []string{"http://string.eiyou.fun", "http://string.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
