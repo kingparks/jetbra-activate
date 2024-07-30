@@ -11,7 +11,7 @@ Open the terminal on MacOS/Linux; Open Git Bash on Windows. Then execute the fol
 
 * Install via go install [通过 go install 安装方式]
 ```shell
-go run github.com/kingparks/jetbra-activate@latest;
+go run github.com/kingparks/jetbra-activate@latest githubGoReadme;
 ```
 
 * Install via direct download binary (use this way, some computers may report false positives, need to close the antivirus software/computer housekeeper/security protection and then proceed)
