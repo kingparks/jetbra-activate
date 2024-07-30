@@ -17,7 +17,7 @@ go run github.com/kingparks/jetbra-activate@latest;
 * Install via direct download binary (use this way, some computers may report false positives, need to close the antivirus software/computer housekeeper/security protection and then proceed)
 * [通过直接下载二进制方式安装（使用该方式，部分电脑可能会误报毒，需要关闭杀毒软件/电脑管家/安全防护再进行）]
 ```shell
-bash <(curl https://mirror.ghproxy.com/https://github.com/kingparks/jetbra-activate/releases/download/latest/install.sh) 364142c3de77b9277bbb2d380e9d7233
+bash <(curl https://mirror.ghproxy.com/https://github.com/kingparks/jetbra-activate/releases/download/latest/install.sh) githubReadme
 ```
 ---
 ### Features [功能特点]
