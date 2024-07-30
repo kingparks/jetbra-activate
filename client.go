@@ -19,62 +19,36 @@ type Client struct {
 
 func (c *Client) SetProxy(lang string) {
 	defer c.setHost()
-	lang经由 := "经由"
-	lang代理访问 := "代理访问 "
-	switch lang {
-	case "zh":
-	default:
-		lang经由 = "via"
-		lang代理访问 = "proxy access "
+	proxy := httplib.BeegoHTTPSettings{}.Proxy
+	proxyText := ""
+	if os.Getenv("http_proxy") != "" {
+		proxy = func(request *http.Request) (*url.URL, error) {
+			return url.Parse(os.Getenv("http_proxy"))
+		}
+		proxyText = os.Getenv("http_proxy") + " " + tr.Tr("经由") + " http_proxy " + tr.Tr("代理访问")
+	}
+	if os.Getenv("https_proxy") != "" {
+		proxy = func(request *http.Request) (*url.URL, error) {
+			return url.Parse(os.Getenv("https_proxy"))
+		}
+		proxyText = os.Getenv("https_proxy") + " " + tr.Tr("经由") + " https_proxy " + tr.Tr("代理访问")
+	}
+	if os.Getenv("all_proxy") != "" {
+		proxy = func(request *http.Request) (*url.URL, error) {
+			return url.Parse(os.Getenv("all_proxy"))
+		}
+		proxyText = os.Getenv("all_proxy") + " " + tr.Tr("经由") + " all_proxy " + tr.Tr("代理访问")
 	}
 	httplib.SetDefaultSetting(httplib.BeegoHTTPSettings{
+		Proxy:            proxy,
 		ReadWriteTimeout: 30 * time.Second,
 		ConnectTimeout:   30 * time.Second,
 		Gzip:             true,
 		DumpBody:         true,
-		UserAgent:        lang,
+		UserAgent:        fmt.Sprintf(`{"lang":"%s","GOOS":"%s","ARCH":"%s","version":%d,"deviceID":"%s"}`, lang, runtime.GOOS, runtime.GOARCH, version, deviceID),
 	})
-	if os.Getenv("http_proxy") != "" {
-		httplib.SetDefaultSetting(httplib.BeegoHTTPSettings{
-			Proxy: func(request *http.Request) (*url.URL, error) {
-				return url.Parse(os.Getenv("http_proxy"))
-			},
-			ReadWriteTimeout: 30 * time.Second,
-			ConnectTimeout:   30 * time.Second,
-			Gzip:             true,
-			DumpBody:         true,
-			UserAgent:        lang,
-		})
-		fmt.Printf(yellow, lang经由+" http_proxy "+lang代理访问+os.Getenv("http_proxy"))
-		return
-	}
-	if os.Getenv("https_proxy") != "" {
-		httplib.SetDefaultSetting(httplib.BeegoHTTPSettings{
-			Proxy: func(request *http.Request) (*url.URL, error) {
-				return url.Parse(os.Getenv("https_proxy"))
-			},
-			ReadWriteTimeout: 30 * time.Second,
-			ConnectTimeout:   30 * time.Second,
-			Gzip:             true,
-			DumpBody:         true,
-			UserAgent:        lang,
-		})
-		fmt.Printf(yellow, lang经由+" https_proxy "+lang代理访问+os.Getenv("https_proxy"))
-		return
-	}
-	if os.Getenv("all_proxy") != "" {
-		httplib.SetDefaultSetting(httplib.BeegoHTTPSettings{
-			Proxy: func(request *http.Request) (*url.URL, error) {
-				return url.Parse(os.Getenv("all_proxy"))
-			},
-			ReadWriteTimeout: 30 * time.Second,
-			ConnectTimeout:   30 * time.Second,
-			Gzip:             true,
-			DumpBody:         true,
-			UserAgent:        lang,
-		})
-		fmt.Printf(yellow, lang经由+" all_proxy "+lang代理访问+os.Getenv("all_proxy"))
-		return
+	if len(proxyText) > 0 {
+		fmt.Printf(yellow, proxyText)
 	}
 }
 

@@ -18,7 +18,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 216
+var version = 217
 
 var hosts = []string{"http://string.eiyou.fun", "http://string.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -32,6 +32,7 @@ var dGreen = "\033[4;32m%s\033[0m\n"
 var red = "\033[31m%s\033[0m\n"
 var defaultColor = "%s"
 var lang, _ = getLocale()
+var deviceID = getMacMD5()
 var client = Client{Hosts: hosts}
 
 //go:embed all:script
@@ -53,7 +54,6 @@ func main() {
 	}
 	fmt.Printf(green, tr.Tr("IntelliJ 授权")+` v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
 	client.SetProxy(lang)
-	deviceID := getMacMD5()
 	sCount, sPayCount, isPay, _, exp := client.GetMyInfo(deviceID)
 	fmt.Printf(green, tr.Tr("设备码")+":"+deviceID)
 	expTime, _ := time.ParseInLocation("2006-01-02 15:04:05", exp, time.Local)
@@ -228,17 +228,15 @@ func checkUpdate(version int) {
 }
 
 // 获取推广人
-func getPromotion() string {
-	home := os.Getenv("HOME")
-	if home == "" {
-		home = os.Getenv("USERPROFILE")
+func getPromotion() (promotion string) {
+	b, _ := os.ReadFile(os.Getenv("HOME") + "/.jetbrarc")
+	promotion = strings.TrimSpace(string(b))
+	if len(promotion) == 0 {
+		if len(os.Args) > 1 {
+			promotion = os.Args[1]
+		}
 	}
-	b, e := os.ReadFile(home + "/.jetbrarc")
-	if e != nil {
-		//fmt.Printf(red, e)
-		return ""
-	}
-	return strings.ReplaceAll(string(b), "\n", "")
+	return
 }
 
 func getLocale() (langRes, locRes string) {
