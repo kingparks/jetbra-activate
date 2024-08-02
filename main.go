@@ -18,7 +18,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 217
+var version = 218
 
 var hosts = []string{"http://string.eiyou.fun", "http://string.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -38,6 +38,9 @@ var client = Client{Hosts: hosts}
 //go:embed all:script
 var scriptFS embed.FS
 
+//go:embed all:locales
+var localeFS embed.FS
+
 type Tr struct {
 	i18n.Locale
 }
@@ -45,12 +48,21 @@ type Tr struct {
 var tr *Tr
 
 func main() {
-	_ = i18n.SetMessage("en-US", "locales/en.ini")
+	localeFileEn, _ := localeFS.ReadFile("locales/en.ini")
+	_ = i18n.SetMessage("en", localeFileEn)
+	localeFileNl, _ := localeFS.ReadFile("locales/nl.ini")
+	_ = i18n.SetMessage("nl", localeFileNl)
+	localeFileRu, _ := localeFS.ReadFile("locales/ru.ini")
+	_ = i18n.SetMessage("ru", localeFileRu)
 	switch lang {
 	case "zh":
-		tr = &Tr{Locale: i18n.Locale{Lang: "zh-CN"}}
+		tr = &Tr{Locale: i18n.Locale{Lang: "zh"}}
+	case "nl":
+		tr = &Tr{Locale: i18n.Locale{Lang: "nl"}}
+	case "ru":
+		tr = &Tr{Locale: i18n.Locale{Lang: "ru"}}
 	default:
-		tr = &Tr{Locale: i18n.Locale{Lang: "en-US"}}
+		tr = &Tr{Locale: i18n.Locale{Lang: "en"}}
 	}
 	fmt.Printf(green, tr.Tr("IntelliJ 授权")+` v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
 	client.SetProxy(lang)
