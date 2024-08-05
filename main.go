@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/md5"
 	"embed"
+	"flag"
 	"fmt"
 	"github.com/atotto/clipboard"
 	"howett.net/plist"
@@ -48,6 +49,9 @@ type Tr struct {
 var tr *Tr
 
 func main() {
+	language := flag.String("l", lang, "set language, eg: zh, en, nl, ru, hu")
+	flag.Parse()
+
 	localeFileEn, _ := localeFS.ReadFile("locales/en.ini")
 	_ = i18n.SetMessage("en", localeFileEn)
 	localeFileNl, _ := localeFS.ReadFile("locales/nl.ini")
@@ -56,6 +60,7 @@ func main() {
 	_ = i18n.SetMessage("ru", localeFileRu)
 	localeFileHu, _ := localeFS.ReadFile("locales/hu.ini")
 	_ = i18n.SetMessage("hu", localeFileHu)
+	lang = *language
 	switch lang {
 	case "zh":
 		tr = &Tr{Locale: i18n.Locale{Lang: "zh"}}
@@ -68,6 +73,7 @@ func main() {
 	default:
 		tr = &Tr{Locale: i18n.Locale{Lang: "en"}}
 	}
+
 	fmt.Printf(green, tr.Tr("IntelliJ 授权")+` v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
 	client.SetProxy(lang)
 	sCount, sPayCount, isPay, _, exp := client.GetMyInfo(deviceID)
