@@ -49,7 +49,7 @@ type Tr struct {
 var tr *Tr
 
 func main() {
-	language := flag.String("l", lang, "set language, eg: zh, en, nl, ru, hu")
+	language := flag.String("l", lang, "set language, eg: zh, en, nl, ru, hu, tr")
 	flag.Parse()
 
 	localeFileEn, _ := localeFS.ReadFile("locales/en.ini")
@@ -60,6 +60,8 @@ func main() {
 	_ = i18n.SetMessage("ru", localeFileRu)
 	localeFileHu, _ := localeFS.ReadFile("locales/hu.ini")
 	_ = i18n.SetMessage("hu", localeFileHu)
+	localeFileTr, _ := localeFS.ReadFile("locales/tr.ini")
+	_ = i18n.SetMessage("tr", localeFileTr)
 	lang = *language
 	switch lang {
 	case "zh":
@@ -70,6 +72,8 @@ func main() {
 		tr = &Tr{Locale: i18n.Locale{Lang: "ru"}}
 	case "hu":
 		tr = &Tr{Locale: i18n.Locale{Lang: "hu"}}
+	case "tr":
+		tr = &Tr{Locale: i18n.Locale{Lang: "tr"}}
 	default:
 		tr = &Tr{Locale: i18n.Locale{Lang: "en"}}
 	}
