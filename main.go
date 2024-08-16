@@ -62,6 +62,8 @@ func main() {
 	_ = i18n.SetMessage("hu", localeFileHu)
 	localeFileTr, _ := localeFS.ReadFile("locales/tr.ini")
 	_ = i18n.SetMessage("tr", localeFileTr)
+	localeFileEs, _ := localeFS.ReadFile("locales/es.ini")
+	_ = i18n.SetMessage("es", localeFileEs)
 	lang = *language
 	switch lang {
 	case "zh":
@@ -74,6 +76,8 @@ func main() {
 		tr = &Tr{Locale: i18n.Locale{Lang: "hu"}}
 	case "tr":
 		tr = &Tr{Locale: i18n.Locale{Lang: "tr"}}
+	case "es":
+		tr = &Tr{Locale: i18n.Locale{Lang: "es"}}
 	default:
 		tr = &Tr{Locale: i18n.Locale{Lang: "en"}}
 	}
