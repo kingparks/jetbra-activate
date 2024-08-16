@@ -84,12 +84,10 @@ func main() {
 
 	fmt.Printf(green, tr.Tr("IntelliJ 授权")+` v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
 	client.SetProxy(lang)
-	sCount, sPayCount, isPay, _, exp := client.GetMyInfo(deviceID)
+	sCount, sPayCount, _, _, exp := client.GetMyInfo(deviceID)
 	fmt.Printf(green, tr.Tr("设备码")+":"+deviceID)
 	expTime, _ := time.ParseInLocation("2006-01-02 15:04:05", exp, time.Local)
-	if isPay == "1" {
-		fmt.Printf(green, tr.Tr("付费到期时间")+":"+exp)
-	}
+	fmt.Printf(green, tr.Tr("付费到期时间")+":"+exp)
 	fmt.Printf("\033[32m%s\033[0m\u001B[1;32m %s \u001B[0m\033[32m%s\033[0m\u001B[1;32m %s \u001B[0m\u001B[32m%s\u001B[0m\n",
 		tr.Tr("推广命令：(已推广"), sCount, tr.Tr("人,推广已付费"), sPayCount, tr.Tr("人；每推广10人或推广付费2人可获得一年授权)"))
 	fmt.Printf(hGreen, "bash <(curl "+githubPath+"install.sh) "+deviceID+"\n")
