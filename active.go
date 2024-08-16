@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"time"
 	"unicode"
 )
 
@@ -182,58 +181,6 @@ func Active(software string) {
 		os.Exit(1)
 	}
 	return
-}
-
-func ReadLic(software string) string {
-	files, _ := os.ReadDir(jetPath)
-	for _, file := range files {
-		if file.IsDir() {
-			if strings.Contains(strings.ToLower(file.Name()), software) {
-				licB, err := os.ReadFile(jetPath + "/" + file.Name() + "/user")
-				if err == nil {
-					lic := string(licB)
-					if lic != "" {
-						if !strings.Contains(lic, "||") {
-							os.Remove(jetPath + "/" + file.Name() + "/user")
-							continue
-						}
-						createTimeS := strings.Split(lic, "||")[0]
-						// 判断文件创建时间超过一年则删除文件
-						createTime, err := time.ParseInLocation("2006-01-02 15:04:05", createTimeS, time.Local)
-						if err != nil {
-							os.Remove(jetPath + "/" + file.Name() + "/user")
-							continue
-						}
-						if createTime.Add(367 * 24 * time.Hour).Before(time.Now()) {
-							os.Remove(jetPath + "/" + file.Name() + "/user")
-							continue
-						}
-						return strings.Split(lic, "||")[1]
-					}
-				}
-			}
-		}
-	}
-	return ""
-}
-func WriteLic(software, lic string) {
-	lic = time.Now().Format("2006-01-02 15:04:05") + "||" + lic
-	files, _ := os.ReadDir(jetPath)
-	for _, file := range files {
-		if file.IsDir() {
-			if strings.Contains(strings.ToLower(file.Name()), software) {
-				os.WriteFile(jetPath+"/"+file.Name()+"/user", []byte(lic), 0644)
-			}
-		}
-	}
-}
-
-func copyFile(src, dst string) {
-	input, _ := os.ReadFile(src)
-	err = os.WriteFile(dst, input, 0644)
-	if err != nil {
-		fmt.Printf(red, err.Error())
-	}
 }
 
 func copyDir(srcFS embed.FS, src string, dst string) error {

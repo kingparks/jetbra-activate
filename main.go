@@ -131,7 +131,6 @@ func main() {
 		if i == 20 {
 			Clean()
 			Active(jbProductChoice[productIndex-1])
-			lic = ReadLic(jbProductChoice[productIndex-1])
 		}
 		time.Sleep(20 * time.Millisecond)
 		h := strings.Repeat("=", i) + strings.Repeat(" ", 49-i)
@@ -149,10 +148,6 @@ func main() {
 		}
 		lic = result
 	case 2:
-		// 获取之前的 lic
-		if lic != "" {
-			goto Process
-		}
 		// 没到期
 		if expTime.After(time.Now()) {
 			isOk, result := client.GetLic(jbProductChoice[productIndex-1], periodIndex-1)
@@ -161,8 +156,6 @@ func main() {
 				return
 			}
 			lic = result
-			// 保存到本地
-			WriteLic(jbProductChoice[productIndex-1], lic)
 			fmt.Println()
 			goto Process
 		}
@@ -189,8 +182,6 @@ func main() {
 			fmt.Printf(red, result)
 			return
 		}
-		// 保存到本地
-		WriteLic(jbProductChoice[productIndex-1], lic)
 		fmt.Println()
 	}
 
