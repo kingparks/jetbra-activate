@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -208,7 +209,15 @@ func getMacMD5() string {
 	}
 	var macAddress []string
 	for _, inter := range interfaces {
-		if strings.HasPrefix(inter.Name, "en") || strings.HasPrefix(inter.Name, "Ethernet") || strings.HasPrefix(inter.Name, "以太网") || strings.HasPrefix(inter.Name, "本地连接") || strings.HasPrefix(inter.Name, "WLAN") {
+		// 大于en6的排除
+		if strings.HasPrefix(inter.Name, "en") {
+			numStr := inter.Name[2:]
+			num, _ := strconv.Atoi(numStr)
+			if num > 6 {
+				continue
+			}
+		}
+		if strings.HasPrefix(inter.Name, "en") || strings.HasPrefix(inter.Name, "Ethernet") || strings.HasPrefix(inter.Name, "以太网") || strings.HasPrefix(inter.Name, "WLAN") {
 			macAddress = append(macAddress, inter.HardwareAddr.String())
 		}
 	}
