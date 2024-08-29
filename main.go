@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/atotto/clipboard"
 	"howett.net/plist"
-	"log"
 	"net"
 	"os"
 	"os/exec"
@@ -202,6 +201,9 @@ Process:
 	fmt.Println()
 	fmt.Printf(hGreen, lic)
 	fmt.Println()
+	for i := 0; i < 4; i++ {
+		_, _ = fmt.Scanln()
+	}
 }
 
 func getMacMD5() string {
@@ -252,7 +254,10 @@ func checkUpdate(version int) {
 		}
 		err := cmd.Run()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf(red, tr.Tr("更新失败,请手动运行命令")+`：bash -c "$(curl -fsSL `+githubPath+`install.sh)"`)
+			for i := 0; i < 4; i++ {
+				_, _ = fmt.Scanln()
+			}
 		}
 		fmt.Println(tr.Tr("更新完成，重新运行程序即可"))
 		os.Exit(0)
