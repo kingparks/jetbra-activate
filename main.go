@@ -112,23 +112,27 @@ func main() {
 	}
 	fmt.Println(tr.Tr("选择的产品为：") + jbProduct[productIndex-1])
 	fmt.Println()
-	fmt.Printf(defaultColor, tr.Tr("选择有效期："))
 
-	jbPeriod := []string{tr.Tr("两天(免费)"), tr.Tr("一年(购买)")}
-	for i, v := range jbPeriod {
-		fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
-	}
-	fmt.Println()
-	fmt.Printf("%s", tr.Tr("请输入有效期编号（直接回车默认为1）："))
-
+	// 到期了
+	_ = []time.Duration{2 * 24 * time.Hour, 367 * 24 * time.Hour}
 	periodIndex := 1
-	_, _ = fmt.Scanln(&periodIndex)
-	if periodIndex < 1 || periodIndex > len(jbPeriod) {
-		fmt.Println(tr.Tr("输入有误"))
-		return
+	if expTime.Before(time.Now()) {
+		fmt.Printf(defaultColor, tr.Tr("选择有效期："))
+		jbPeriod := []string{tr.Tr("两天(免费)"), tr.Tr("一年(购买)")}
+		for i, v := range jbPeriod {
+			fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
+		}
+		fmt.Println()
+		fmt.Printf("%s", tr.Tr("请输入有效期编号（直接回车默认为1）："))
+		_, _ = fmt.Scanln(&periodIndex)
+		if periodIndex < 1 || periodIndex > len(jbPeriod) {
+			fmt.Println(tr.Tr("输入有误"))
+			return
+		}
+		fmt.Println(tr.Tr("选择的有效期为：") + jbPeriod[periodIndex-1])
+		fmt.Println()
 	}
-	fmt.Println(tr.Tr("选择的有效期为：") + jbPeriod[periodIndex-1])
-	fmt.Println()
+
 	lic := ""
 	for i := 0; i < 50; i++ {
 		if i == 20 {
@@ -241,6 +245,7 @@ func checkUpdate(version int) {
 		fmt.Println(`bash -c "$(curl -fsSL ` + githubPath + `install.sh)"`)
 		var cmd *exec.Cmd
 		if strings.Contains(strings.ToLower(os.Getenv("ComSpec")), "cmd.exe") {
+			// todo 可能不在C盘
 			cmd = exec.Command("C:\\Program Files\\Git\\git-bash.exe", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
 		} else {
 			cmd = exec.Command("bash", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
