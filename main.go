@@ -241,28 +241,25 @@ func printAD() {
 
 func checkUpdate(version int) {
 	upUrl := client.CheckVersion(fmt.Sprint(version))
-	if upUrl != "" {
-		fmt.Printf(red, tr.Tr("有新版本可用，尝试自动更新中，若失败，请输入下面命令并回车手动更新程序："))
-		fmt.Println()
-		fmt.Println(`bash -c "$(curl -fsSL ` + githubPath + `install.sh)"`)
-		var cmd *exec.Cmd
-		if strings.Contains(strings.ToLower(os.Getenv("ComSpec")), "cmd.exe") {
-			// todo 可能不在C盘
-			cmd = exec.Command("C:\\Program Files\\Git\\git-bash.exe", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
-		} else {
-			cmd = exec.Command("bash", "-c", fmt.Sprintf(`bash -c "$(curl -fsSL %sinstall.sh)"`, githubPath))
-		}
-		err := cmd.Run()
-		if err != nil {
-			fmt.Printf(red, tr.Tr("更新失败,请手动运行命令")+`：bash -c "$(curl -fsSL `+githubPath+`install.sh)"`)
-			for i := 0; i < 4; i++ {
-				_, _ = fmt.Scanln()
-			}
-		}
-		fmt.Println(tr.Tr("更新完成，重新运行程序即可"))
-		os.Exit(0)
+	if upUrl == "" {
 		return
 	}
+	isCopyText := ""
+	installCmd := `bash -c "$(curl -fsSL ` + githubPath + `install.sh)"`
+	errClip := clipboard.WriteAll(installCmd)
+	if errClip == nil {
+		isCopyText = tr.Tr("（已复制到剪贴板）")
+	}
+	switch runtime.GOOS {
+	case "windows":
+		fmt.Printf(red, tr.Tr("有新版本，请关闭本窗口，将下面命令粘贴到GitBash窗口执行")+isCopyText+`：`)
+	default:
+		fmt.Printf(red, tr.Tr("有新版本，请关闭本窗口，将下面命令粘贴到新终端窗口执行")+isCopyText+`：`)
+	}
+	fmt.Printf(hGreen, installCmd)
+	_, _ = fmt.Scanln()
+	os.Exit(0)
+	return
 }
 
 // 获取推广人
