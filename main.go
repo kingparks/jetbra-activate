@@ -19,7 +19,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 219
+var version = 220
 
 var hosts = []string{"http://string.eiyou.fun", "http://string.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -112,9 +112,9 @@ func main() {
 	fmt.Println(tr.Tr("选择的产品为：") + jbProduct[productIndex-1])
 	fmt.Println()
 
+	periodIndex := 2
 	// 到期了
 	_ = []time.Duration{2 * 24 * time.Hour, 367 * 24 * time.Hour}
-	periodIndex := 1
 	if expTime.Before(time.Now()) {
 		fmt.Printf(defaultColor, tr.Tr("选择有效期："))
 		jbPeriod := []string{tr.Tr("两天(免费)"), tr.Tr("一年(购买)")}
@@ -198,6 +198,15 @@ Process:
 		isCopyText = tr.Tr("（已复制到剪贴板）")
 	}
 	fmt.Printf(yellow, tr.Tr("首次执行请重启IDE，然后填入下面授权码；非首次执行直接填入下面授权码即可")+isCopyText)
+	switch runtime.GOOS {
+	case "windows":
+		_ = exec.Command("taskkill", "/IM", jbProductChoice[productIndex-1]+".exe", "/F").Run()
+		_ = exec.Command("taskkill", "/IM", jbProductChoice[productIndex-1]+"64.exe", "/F").Run()
+	case "darwin":
+		_ = exec.Command("killall", "-9", jbProductChoice[productIndex-1]).Run()
+	case "linux":
+		_ = exec.Command("killall", "-9", "java").Run()
+	}
 	fmt.Println()
 	fmt.Printf(hGreen, lic)
 	fmt.Println()
