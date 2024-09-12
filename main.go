@@ -19,7 +19,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 220
+var version = 221
 
 var hosts = []string{"http://string.eiyou.fun", "http://string.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -172,7 +172,7 @@ func main() {
 		if errClip == nil {
 			isCopyText = tr.Tr("（已复制到剪贴板）")
 		}
-		fmt.Println(tr.Tr("使用浏览器打开下面地址进行捐赠") + isCopyText)
+		fmt.Println(tr.Tr("付费已到期,捐赠以获取一年期授权") + isCopyText)
 		fmt.Printf(dGreen, payUrl)
 		fmt.Println(tr.Tr("捐赠完成后请回车"))
 		//检测控制台回车
