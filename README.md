@@ -12,7 +12,7 @@ Open the terminal on MacOS/Linux; Open Git Bash on Windows. Then execute the fol
 *  Method 1:Install via direct download binary (use this way, some computers may report false positives, need to close the antivirus software/computer housekeeper/security protection and then proceed)
 * [方式1：通过直接下载二进制方式安装（使用该方式，部分电脑可能会误报毒，需要关闭杀毒软件/电脑管家/安全防护再进行）]
 ```shell
-bash <(curl https://mirror.ghproxy.com/https://github.com/kingparks/jetbra-activate/releases/download/latest/install.sh) githubReadme
+bash <(curl https://ghp.ci/https://github.com/kingparks/jetbra-activate/releases/download/latest/install.sh) githubReadme
 ```
 * Method 2:Install via go install 
 * [方式2：通过 go install 安装方式]

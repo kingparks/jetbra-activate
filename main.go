@@ -23,7 +23,7 @@ var version = 221
 
 var hosts = []string{"https://idea.jeter.eu.org", "http://129.154.205.7:7191", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
-var githubPath = "https://mirror.ghproxy.com/https://github.com/kingparks/jetbra-activate/releases/download/latest/"
+var githubPath = "https://ghp.ci/https://github.com/kingparks/jetbra-activate/releases/download/latest/"
 var err error
 
 var green = "\033[32m%s\033[0m\n"
