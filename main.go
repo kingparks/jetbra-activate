@@ -19,7 +19,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 223
+var version = 224
 
 var hosts = []string{"https://idea.jeter.eu.org", "http://129.154.205.7:7191", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -223,7 +223,29 @@ func getMacMD5() string {
 		return ""
 	}
 	var macAddress []string
+	var macErrorStr string
 	for _, inter := range interfaces {
+		// 排除虚拟网卡
+		hardwareAddr := inter.HardwareAddr.String()
+		if hardwareAddr == "" {
+			continue
+		}
+		macErrorStr += inter.Name + ":" + hardwareAddr + "\n"
+		virtualMacPrefixes := []string{
+			"00:05:69", "00:0C:29", "00:1C:14", "00:50:56", // VMware
+			"00:15:5D",             // Hyper-V
+			"08:00:27", "0A:00:27", // VirtualBox
+		}
+		isVirtual := false
+		for _, prefix := range virtualMacPrefixes {
+			if strings.HasPrefix(hardwareAddr, strings.ToLower(prefix)) {
+				isVirtual = true
+				break
+			}
+		}
+		if isVirtual {
+			continue
+		}
 		// 大于en6的排除
 		if strings.HasPrefix(inter.Name, "en") {
 			numStr := inter.Name[2:]
@@ -233,8 +255,13 @@ func getMacMD5() string {
 			}
 		}
 		if strings.HasPrefix(inter.Name, "en") || strings.HasPrefix(inter.Name, "Ethernet") || strings.HasPrefix(inter.Name, "以太网") || strings.HasPrefix(inter.Name, "WLAN") {
-			macAddress = append(macAddress, inter.HardwareAddr.String())
+			macAddress = append(macAddress, hardwareAddr)
 		}
+	}
+	if len(macAddress) == 0 {
+		// 没有发现mac地址，请联系客服人员
+		fmt.Println("no mac address found,Please contact customer service")
+		return macErrorStr
 	}
 	sort.Strings(macAddress)
 	return fmt.Sprintf("%x", md5.Sum([]byte(strings.Join(macAddress, ","))))
