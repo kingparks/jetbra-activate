@@ -261,6 +261,7 @@ func getMacMD5() string {
 	if len(macAddress) == 0 {
 		// 没有发现mac地址，请联系客服人员
 		fmt.Println("no mac address found,Please contact customer service")
+		_, _ = fmt.Scanln()
 		return macErrorStr
 	}
 	sort.Strings(macAddress)
