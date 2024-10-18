@@ -27,7 +27,7 @@ jetbra githubReadme;
 # Windows 
 # 双击 jetbra_xx_xxx.exe
 ```
-* 方式4：通过 go install 安装方式
+方式4：通过 go install 安装方式
 ```shell
 go run github.com/kingparks/jetbra-activate@latest githubGoReadme;
 ```
