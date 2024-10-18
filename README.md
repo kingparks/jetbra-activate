@@ -9,15 +9,15 @@ Jetbra Active is a JetBrains IDE activation tool that helps you quickly activate
 Open the terminal on MacOS/Linux; Open Git Bash on Windows. Then execute the following command to install:
 >some computers may report false positives, need to close the antivirus software/computer housekeeper/security protection and then proceed
 
-Method 1:Install via GitHub script
+Method 1: Install via GitHub script
 ```shell
 bash <(curl -Lk https://github.com/kingparks/jetbra-activate/releases/download/latest/i.sh) githubReadme
 ```
-Method 2:Install via ghp.ci proxy script
+Method 2: Install via ghp.ci proxy script
 ```shell
 bash <(curl -Lk https://ghp.ci/https://github.com/kingparks/jetbra-activate/releases/download/latest/install.sh) githubReadme
 ```
-Method 3:Manually download the binary file
+Method 3: Manually download the binary file
 > Download the binary file for the corresponding operating system from the [release](https://github.com/kingparks/jetbra-activate/releases) page
  ```shell
 # MaxOS/Linux
@@ -27,7 +27,7 @@ jetbra githubReadme;
 # Windows 
 # double click jetbra_xx_xxx.exe
 ```
-Method 4:Install via go install 
+Method 4: Install via go install 
 ```shell
 go run github.com/kingparks/jetbra-activate@latest githubGoReadme;
 ```
