@@ -19,7 +19,14 @@ bash <(curl -Lk https://ghp.ci/https://github.com/kingparks/jetbra-activate/rele
 ```
 * Method 3: Manually download the binary file
 > Download the binary file for the corresponding operating system from the [release](https://github.com/kingparks/jetbra-activate/releases) page
-
+ ```shell
+# MaxOS/Linux
+sudo mv jetbra_xx_xxx /usr/local/bin/jetbra;
+chmod +x /usr/local/bin/jetbra;
+jetbra githubReadme;
+# Windows 
+# 双击 jetbra_xx_xxx.exe
+```
 * Method 4:Install via go install 
 ```shell
 go run github.com/kingparks/jetbra-activate@latest githubGoReadme;

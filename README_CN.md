@@ -19,6 +19,14 @@ bash <(curl -Lk https://github.com/kingparks/jetbra-activate/releases/download/l
 ```
 * 方式3：手动下在二进制文件
 > 从 [release](https://github.com/kingparks/jetbra-activate/releases) 页下载对应操作系统的二进制文件
+ ```shell
+# MaxOS/Linux
+sudo mv jetbra_xx_xxx /usr/local/bin/jetbra;
+chmod +x /usr/local/bin/jetbra;
+jetbra githubReadme;
+# Windows 
+# double click jetbra_xx_xxx.exe
+```
 
 * 方式4：通过 go install 安装方式
 ```shell
