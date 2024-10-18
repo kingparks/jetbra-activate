@@ -223,11 +223,14 @@ func getMacMD5() string {
 		return ""
 	}
 	var macAddress []string
+	var wifiAddress []string
+	var bluetoothAddress []string
 	var macErrorStr string
 	for _, inter := range interfaces {
 		// 排除虚拟网卡
 		hardwareAddr := inter.HardwareAddr.String()
 		if hardwareAddr == "" {
+			//fmt.Println(fmt.Sprintf("log: have not hardwareAddr :%+v",inter))
 			continue
 		}
 		macErrorStr += inter.Name + ":" + hardwareAddr + "\n"
@@ -244,6 +247,7 @@ func getMacMD5() string {
 			}
 		}
 		if isVirtual {
+			//fmt.Println(fmt.Sprintf("log: isVirtual :%+v",inter))
 			continue
 		}
 		// 大于en6的排除
@@ -251,18 +255,31 @@ func getMacMD5() string {
 			numStr := inter.Name[2:]
 			num, _ := strconv.Atoi(numStr)
 			if num > 6 {
+				//fmt.Println(fmt.Sprintf("log: is num>6 :%+v",inter))
 				continue
 			}
 		}
 		if strings.HasPrefix(inter.Name, "en") || strings.HasPrefix(inter.Name, "Ethernet") || strings.HasPrefix(inter.Name, "以太网") || strings.HasPrefix(inter.Name, "WLAN") {
+			//fmt.Println(fmt.Sprintf("log: add :%+v",inter))
 			macAddress = append(macAddress, hardwareAddr)
+		} else if strings.HasPrefix(inter.Name, "Wi-Fi") || strings.HasPrefix(inter.Name, "无线网络") {
+			wifiAddress = append(wifiAddress, hardwareAddr)
+		} else if strings.HasPrefix(inter.Name, "Bluetooth") || strings.HasPrefix(inter.Name, "蓝牙网络连接") {
+			bluetoothAddress = append(bluetoothAddress, hardwareAddr)
+		} else {
+			//fmt.Println(fmt.Sprintf("log: not add :%+v",inter))
 		}
 	}
 	if len(macAddress) == 0 {
-		// 没有发现mac地址，请联系客服人员
-		fmt.Println("no mac address found,Please contact customer service")
-		_, _ = fmt.Scanln()
-		return macErrorStr
+		macAddress = append(macAddress, wifiAddress...)
+		if len(macAddress) == 0 {
+			macAddress = append(macAddress, bluetoothAddress...)
+		}
+		if len(macAddress) == 0 {
+			fmt.Printf(red, "no mac address found,Please contact customer service")
+			_, _ = fmt.Scanln()
+			return macErrorStr
+		}
 	}
 	sort.Strings(macAddress)
 	return fmt.Sprintf("%x", md5.Sum([]byte(strings.Join(macAddress, ","))))
