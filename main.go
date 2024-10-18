@@ -90,7 +90,7 @@ func main() {
 	fmt.Printf(green, tr.Tr("付费到期时间")+":"+exp)
 	fmt.Printf("\033[32m%s\033[0m\u001B[1;32m %s \u001B[0m\033[32m%s\033[0m\u001B[1;32m %s \u001B[0m\u001B[32m%s\u001B[0m\n",
 		tr.Tr("推广命令：(已推广"), sCount, tr.Tr("人,推广已付费"), sPayCount, tr.Tr("人；每推广10人或推广付费2人可获得一年授权)"))
-	fmt.Printf(hGreen, "bash <(curl "+githubPath+"install.sh) "+deviceID+"\n")
+	fmt.Printf(hGreen, "bash <(curl -Lk "+githubPath+"install.sh) "+deviceID+"\n")
 
 	printAD()
 	checkUpdate(version)
@@ -299,7 +299,7 @@ func checkUpdate(version int) {
 		return
 	}
 	isCopyText := ""
-	installCmd := `bash -c "$(curl -fsSL ` + githubPath + `install.sh)"`
+	installCmd := `bash -c "$(curl -fsSLk ` + githubPath + `install.sh)"`
 	errClip := clipboard.WriteAll(installCmd)
 	if errClip == nil {
 		isCopyText = tr.Tr("（已复制到剪贴板）")
