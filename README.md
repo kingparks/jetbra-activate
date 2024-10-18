@@ -25,7 +25,7 @@ sudo mv jetbra_xx_xxx /usr/local/bin/jetbra;
 chmod +x /usr/local/bin/jetbra;
 jetbra githubReadme;
 # Windows 
-# 双击 jetbra_xx_xxx.exe
+# double click jetbra_xx_xxx.exe
 ```
 * Method 4:Install via go install 
 ```shell
