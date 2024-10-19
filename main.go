@@ -114,10 +114,10 @@ func main() {
 
 	periodIndex := 2
 	// 到期了
-	_ = []time.Duration{2 * 24 * time.Hour, 367 * 24 * time.Hour}
+	_ = []time.Duration{1 * 24 * time.Hour, 367 * 24 * time.Hour}
 	if expTime.Before(time.Now()) {
 		fmt.Printf(defaultColor, tr.Tr("选择有效期："))
-		jbPeriod := []string{tr.Tr("两天(免费)"), tr.Tr("一年(购买)")}
+		jbPeriod := []string{"1" + tr.Tr("天(免费)"), "1" + tr.Tr("年(购买)")}
 		for i, v := range jbPeriod {
 			fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
 		}
