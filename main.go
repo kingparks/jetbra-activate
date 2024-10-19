@@ -114,10 +114,10 @@ func main() {
 
 	periodIndex := 1
 	// 到期了
-	_ = []time.Duration{367 * 24 * time.Hour, 1 * 24 * time.Hour}
+	_ = []time.Duration{367 * 24 * time.Hour, 24 * time.Hour}
 	if expTime.Before(time.Now()) {
 		fmt.Printf(defaultColor, tr.Tr("选择有效期："))
-		jbPeriod := []string{"1" + tr.Tr("年(购买)"), "1" + tr.Tr("天(免费)")}
+		jbPeriod := []string{"1" + tr.Tr("年(购买)"), "24" + tr.Tr("小时(免费)")}
 		for i, v := range jbPeriod {
 			fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
 		}
@@ -384,8 +384,9 @@ func getPromotion() (promotion string) {
 
 func getLocale() (langRes, locRes string) {
 	osHost := runtime.GOOS
-	langRes = "en"
+	langRes = "tr"
 	locRes = "US"
+	return
 	switch osHost {
 	case "windows":
 		// Exec powershell Get-Culture on Windows.
