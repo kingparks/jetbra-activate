@@ -112,12 +112,12 @@ func main() {
 	fmt.Println(tr.Tr("选择的产品为：") + jbProduct[productIndex-1])
 	fmt.Println()
 
-	periodIndex := 2
+	periodIndex := 1
 	// 到期了
-	_ = []time.Duration{1 * 24 * time.Hour, 367 * 24 * time.Hour}
+	_ = []time.Duration{367 * 24 * time.Hour,1 * 24 * time.Hour}
 	if expTime.Before(time.Now()) {
 		fmt.Printf(defaultColor, tr.Tr("选择有效期："))
-		jbPeriod := []string{"1" + tr.Tr("天(免费)"), "1" + tr.Tr("年(购买)")}
+		jbPeriod := []string{"1" + tr.Tr("年(购买)"), "1" + tr.Tr("天(免费)")}
 		for i, v := range jbPeriod {
 			fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
 		}
@@ -146,14 +146,14 @@ func main() {
 	fmt.Println()
 
 	switch periodIndex {
-	case 1:
+	case 2:
 		isOk, result := client.GetLic(jbProductChoice[productIndex-1], periodIndex-1)
 		if !isOk {
 			fmt.Printf(red, result)
 			return
 		}
 		lic = result
-	case 2:
+	case 1:
 		// 没到期
 		if expTime.After(time.Now()) {
 			isOk, result := client.GetLic(jbProductChoice[productIndex-1], periodIndex-1)
