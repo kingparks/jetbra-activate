@@ -384,9 +384,8 @@ func getPromotion() (promotion string) {
 
 func getLocale() (langRes, locRes string) {
 	osHost := runtime.GOOS
-	langRes = "tr"
+	langRes = "en"
 	locRes = "US"
-	return
 	switch osHost {
 	case "windows":
 		// Exec powershell Get-Culture on Windows.
