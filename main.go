@@ -113,8 +113,8 @@ func main() {
 	fmt.Println(tr.Tr("选择的产品为：") + jbProduct[productIndex-1])
 	fmt.Println()
 
-	periodIndex := 1
 	// 到期了
+	periodIndex := 1
 	_ = []time.Duration{367 * 24 * time.Hour, 24 * time.Hour}
 	if expTime.Before(time.Now()) {
 		fmt.Printf(defaultColor, tr.Tr("选择有效期："))
