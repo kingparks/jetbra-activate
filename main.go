@@ -19,7 +19,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 225
+var version = 226
 
 var hosts = []string{"https://idea.jeter.eu.org", "http://129.154.205.7:7191", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -114,7 +114,7 @@ func main() {
 
 	periodIndex := 1
 	// 到期了
-	_ = []time.Duration{367 * 24 * time.Hour,1 * 24 * time.Hour}
+	_ = []time.Duration{367 * 24 * time.Hour, 1 * 24 * time.Hour}
 	if expTime.Before(time.Now()) {
 		fmt.Printf(defaultColor, tr.Tr("选择有效期："))
 		jbPeriod := []string{"1" + tr.Tr("年(购买)"), "1" + tr.Tr("天(免费)")}
