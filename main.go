@@ -85,6 +85,7 @@ func main() {
 
 	fmt.Printf(green, tr.Tr("IntelliJ 授权")+` v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
 	client.SetProxy(lang)
+	checkUpdate(version)
 	sCount, sPayCount, _, _, exp := client.GetMyInfo(deviceID)
 	fmt.Printf(green, tr.Tr("设备码")+":"+deviceID)
 	expTime, _ := time.ParseInLocation("2006-01-02 15:04:05", exp, time.Local)
@@ -94,8 +95,8 @@ func main() {
 	fmt.Printf(hGreen, "bash <(curl -Lk "+githubPath+"install.sh) "+deviceID+"\n")
 
 	printAD()
-	checkUpdate(version)
 	fmt.Println()
+
 	fmt.Printf(defaultColor, tr.Tr("选择要授权的产品："))
 	jbProduct := []string{"IntelliJ IDEA", "CLion", "PhpStorm", "Goland", "PyCharm", "WebStorm", "Rider", "DataGrip", "DataSpell"}
 	jbProductChoice := []string{"idea", "clion", "phpstorm", "goland", "pycharm", "webstorm", "rider", "datagrip", "dataspell"}
