@@ -96,7 +96,7 @@ func (c *Client) PayCheck(orderID, deviceID string) (isPay bool) {
 func (c *Client) GetMyInfo(deviceID string) (sCount, sPayCount, isPay, ticket, exp string) {
 	body, _ := json.Marshal(map[string]string{
 		"device":    deviceID,
-		"deviceMac": getMacMD5_241018(),
+		"deviceMac": getMac_241018(),
 		"sDevice":   getPromotion(),
 	})
 	dUser, _ := user.Current()
