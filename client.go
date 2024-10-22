@@ -46,7 +46,7 @@ func (c *Client) SetProxy(lang string) {
 		ConnectTimeout:   30 * time.Second,
 		Gzip:             true,
 		DumpBody:         true,
-		UserAgent:        fmt.Sprintf(`{"lang":"%s","GOOS":"%s","ARCH":"%s","version":%d,"deviceID":"%s"}`, lang, runtime.GOOS, runtime.GOARCH, version, deviceID),
+		UserAgent:        fmt.Sprintf(`{"lang":"%s","GOOS":"%s","ARCH":"%s","version":%d,"deviceID":"%s","machineID":"%s"}`, lang, runtime.GOOS, runtime.GOARCH, version, deviceID, machineID),
 	})
 	if len(proxyText) > 0 {
 		fmt.Printf(yellow, proxyText)
@@ -97,7 +97,6 @@ func (c *Client) GetMyInfo(deviceID string) (sCount, sPayCount, isPay, ticket, e
 	body, _ := json.Marshal(map[string]string{
 		"device":    deviceID,
 		"deviceMac": getMacMD5_241018(),
-		"machineID": getMacMD5_241019(),
 		"sDevice":   getPromotion(),
 	})
 	dUser, _ := user.Current()
@@ -131,7 +130,7 @@ func (c *Client) CheckVersion(version string) (upUrl string) {
 }
 
 func (c *Client) GetLic(product string, dur int) (isOk bool, result string) {
-	req := httplib.Get(c.host + "/getLic?device=" + getMacMD5() + "&dur=" + fmt.Sprint(dur) + "&product=" + product)
+	req := httplib.Get(c.host + "/getLic?device=" + getMacMD5_241018() + "&dur=" + fmt.Sprint(dur) + "&product=" + product)
 	res, err := req.String()
 	if err != nil {
 		isOk = false
