@@ -37,7 +37,6 @@ go run github.com/kingparks/jetbra-activate@latest githubGoReadme;
 
 > 适用于IDEs全系列软件，如：IntelliJ IDEA、AppCode、CLion、DataGrip、GoLand、PhpStorm、PyCharm、Rider、RubyMine、WebStorm，当然也适用Windows/Mac/Linux平台。 此激活方法支持登录账号，支持在线更新，支持跨平台，支持最新版(正版激活)
 
----
 ![img_7.png](./img/img_2.png)
 
 ### Star History

@@ -37,7 +37,6 @@ go run github.com/kingparks/jetbra-activate@latest githubGoReadme;
 
 > This activation method is compatible with all JetBrains software, such as IntelliJ IDEA, AppCode, CLion, DataGrip, GoLand, PhpStorm, PyCharm, Rider, RubyMine, and WebStorm. It also supports Windows, Mac, and Linux platforms. This activation method supports account login, online updates, cross-platform functionality, and the latest version (genuine activation)
 
----
 ![img_7.png](./img/img.png)
 
 
