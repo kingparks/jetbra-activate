@@ -1,6 +1,6 @@
 ## JetBrains IDE 激活
 
-[English](./README.md)
+> 🌐️ 中文 | [English](README.md)
 
 Jetbra Active 是一个 JetBrains IDE 激活工具，可以帮助你快速激活 JetBrains IDE
 ---

@@ -1,6 +1,6 @@
 ## Jetbra Activate
 
-[中文](./README_CN.md)
+> 🌐️ English | [中文](README_CN.md)
 
 Jetbra Active is a JetBrains IDE activation tool that helps you quickly activate JetBrains IDE.
 ---
