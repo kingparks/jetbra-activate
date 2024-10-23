@@ -17,7 +17,7 @@ bash <(curl -Lk https://ghp.ci/https://github.com/kingparks/jetbra-activate/rele
 ```shell
 bash <(curl -Lk https://github.com/kingparks/jetbra-activate/releases/download/latest/i.sh) githubReadme
 ```
-方式3：手动下在二进制文件
+方式3：手动下载二进制文件
 > 从 [release](https://github.com/kingparks/jetbra-activate/releases) 页下载对应操作系统的二进制文件
  ```shell
 # MaxOS/Linux
