@@ -208,6 +208,7 @@ Process:
 	case "darwin":
 		_ = exec.Command("killall", "-9", jbProductChoice[productIndex-1]).Run()
 	case "linux":
+		_ = exec.Command("killall", "-9", jbProductChoice[productIndex-1]+".sh").Run()
 		_ = exec.Command("killall", "-9", "java").Run()
 	}
 	fmt.Println()
