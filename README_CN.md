@@ -41,4 +41,10 @@ go run github.com/kingparks/jetbra-activate@latest githubGoReadme;
 ![img_7.png](./img/img_2.png)
 
 ### Star History
-![Star History Chart](https://api.star-history.com/svg?repos=kingparks/jetbra-activate&type=Date)
+<a href="https://star-history.com/#kingparks/jetbra-activate&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=kingparks/jetbra-activate&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=kingparks/jetbra-activate&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=kingparks/jetbra-activate&type=Date" />
+ </picture>
+</a>
