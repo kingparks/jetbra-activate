@@ -22,8 +22,8 @@ import (
 
 var version = 227
 
-var hosts = []string{"https://idea.jeter.eu.org", "http://129.154.205.7:7191", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
-var host = hosts[0]
+var hosts = []string{"http://129.154.205.7:7191", "https://idea.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
+var host = hosts[1]
 var githubPath = "https://ghp.ci/https://github.com/kingparks/jetbra-activate/releases/download/latest/"
 var err error
 
