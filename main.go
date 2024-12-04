@@ -20,7 +20,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 227
+var version = 228
 
 var hosts = []string{"http://129.154.205.7:7191", "https://idea.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[1]
@@ -85,6 +85,14 @@ func main() {
 	}
 
 	fmt.Printf(green, tr.Tr("IntelliJ 授权")+` v`+strings.Join(strings.Split(fmt.Sprint(version), ""), "."))
+	// 检查是否在容器环境
+	if content, err := os.ReadFile("/proc/1/cgroup"); err == nil {
+		if strings.Contains(string(content), "/docker/") {
+			fmt.Printf(red, tr.Tr("不支持容器环境"))
+			_, _ = fmt.Scanln()
+			panic(tr.Tr("不支持容器环境"))
+		}
+	}
 	client.SetProxy(lang)
 	checkUpdate(version)
 	sCount, sPayCount, _, _, exp := client.GetMyInfo(deviceID)
