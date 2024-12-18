@@ -13,9 +13,9 @@ Method 1: Install via GitHub script
 ```shell
 bash <(curl -Lk https://github.com/kingparks/jetbra-activate/releases/download/latest/i.sh) githubReadme
 ```
-Method 2: Install via ghp.ci proxy script
+Method 2: Install via Gitee script
 ```shell
-bash <(curl -Lk https://ghp.ci/https://github.com/kingparks/jetbra-activate/releases/download/latest/install.sh) githubReadme
+bash <(curl -Lk https://gitee.com/kingparks/jetbra-activate/releases/download/latest/ic.sh) githubReadme
 ```
 Method 3: Manually download the binary file
 > Download the binary file for the corresponding operating system from the [release](https://github.com/kingparks/jetbra-activate/releases) page

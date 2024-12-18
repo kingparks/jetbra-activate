@@ -22,9 +22,9 @@ import (
 
 var version = 228
 
-var hosts = []string{"http://129.154.205.7:7191", "https://idea.jeter.eu.org", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
-var host = hosts[1]
-var githubPath = "https://ghp.ci/https://github.com/kingparks/jetbra-activate/releases/download/latest/"
+var hosts = []string{"https://idea.jeter.eu.org", "http://129.154.205.7:7191", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
+var host = hosts[0]
+var githubPath = "https://github.com/kingparks/jetbra-activate/releases/download/latest/"
 var err error
 
 var green = "\033[32m%s\033[0m\n"
@@ -70,6 +70,7 @@ func main() {
 	switch lang {
 	case "zh":
 		tr = &Tr{Locale: i18n.Locale{Lang: "zh"}}
+		githubPath = strings.ReplaceAll(githubPath, "https://github.com", "https://gitee.com")
 	case "nl":
 		tr = &Tr{Locale: i18n.Locale{Lang: "nl"}}
 	case "ru":

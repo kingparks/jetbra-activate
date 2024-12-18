@@ -9,9 +9,9 @@ Jetbra Active 是一个 JetBrains IDE 激活工具，可以帮助你快速激活
 在 MacOS/Linux 中，请打开终端；在 Windows 中，请打开 Git Bash。然后执行以下命令来安装：
 > 部分电脑可能会误报毒，需要关闭杀毒软件/电脑管家/安全防护再进行
 
-方式1：通过 ghp.ci 代理脚本
+方式1：通过 Gitee 脚本
 ```shell
-bash <(curl -Lk https://ghp.ci/https://github.com/kingparks/jetbra-activate/releases/download/latest/install.sh) githubReadme
+bash <(curl -Lk https://gitee.com/kingparks/jetbra-activate/releases/download/latest/ic.sh) githubReadme
 ```
 方式2：通过 GitHub 脚本
 ```shell
