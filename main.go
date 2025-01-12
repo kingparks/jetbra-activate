@@ -20,7 +20,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 228
+var version = 229
 
 var hosts = []string{"https://idea.jeter.eu.org", "http://129.154.205.7:7191", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -109,8 +109,8 @@ func main() {
 	fmt.Println()
 
 	fmt.Printf(defaultColor, tr.Tr("选择要授权的产品："))
-	jbProduct := []string{"IntelliJ IDEA", "CLion", "PhpStorm", "Goland", "PyCharm", "WebStorm", "Rider", "DataGrip", "DataSpell"}
-	jbProductChoice := []string{"idea", "clion", "phpstorm", "goland", "pycharm", "webstorm", "rider", "datagrip", "dataspell"}
+	jbProduct := []string{"IntelliJ IDEA", "CLion", "PhpStorm", "Goland", "PyCharm", "WebStorm", "Rider", "DataGrip", "DataSpell", "RustRover"}
+	jbProductChoice := []string{"idea", "clion", "phpstorm", "goland", "pycharm", "webstorm", "rider", "datagrip", "dataspell", "rustrover"}
 	for i, v := range jbProduct {
 		fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
 	}

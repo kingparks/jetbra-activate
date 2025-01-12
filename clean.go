@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var jbProducts = []string{"idea", "clion", "phpstorm", "goland", "pycharm", "webstorm", "webide", "rider", "datagrip", "rubymine", "appcode", "dataspell", "gateway", "jetbrains_client", "jetbrainsclient", "studio", "devecostudio"}
+var jbProducts = []string{"idea", "clion", "phpstorm", "goland", "pycharm", "webstorm", "webide", "rider", "datagrip", "rubymine", "appcode", "dataspell", "gateway", "jetbrains_client", "jetbrainsclient", "studio", "devecostudio", "rustrover"}
 
 func Clean() {
 	switch runtime.GOOS {

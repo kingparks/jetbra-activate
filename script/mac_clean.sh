@@ -3,7 +3,7 @@
 set -e
 
 OS_NAME=$(uname -s)
-JB_PRODUCTS="idea clion phpstorm goland pycharm webstorm webide rider datagrip rubymine appcode dataspell gateway jetbrains_client jetbrainsclient studio devecostudio"
+JB_PRODUCTS="idea clion phpstorm goland pycharm webstorm webide rider datagrip rubymine appcode dataspell gateway jetbrains_client jetbrainsclient studio devecostudio rustrover"
 
 KDE_ENV_DIR="${HOME}/.config/plasma-workspace/env"
 
