@@ -109,8 +109,8 @@ func main() {
 	fmt.Println()
 
 	fmt.Printf(defaultColor, tr.Tr("选择要授权的产品："))
-	jbProduct := []string{"IntelliJ IDEA", "CLion", "PhpStorm", "Goland", "PyCharm", "WebStorm", "Rider", "DataGrip", "DataSpell", "RustRover"}
-	jbProductChoice := []string{"idea", "clion", "phpstorm", "goland", "pycharm", "webstorm", "rider", "datagrip", "dataspell", "rustrover"}
+	jbProduct := []string{"IntelliJ IDEA", "CLion", "PhpStorm", "Goland", "PyCharm", "WebStorm", "Rider", "DataGrip", "DataSpell", "RustRover", "ReSharper"}
+	jbProductChoice := []string{"idea", "clion", "phpstorm", "goland", "pycharm", "webstorm", "rider", "datagrip", "dataspell", "rustrover", "resharper"}
 	for i, v := range jbProduct {
 		fmt.Printf(hGreen, fmt.Sprintf("%d. %s\t", i+1, v))
 	}
