@@ -20,7 +20,7 @@ import (
 	"github.com/unknwon/i18n"
 )
 
-var version = 229
+var version = 230
 
 var hosts = []string{"https://idea.jeter.eu.org", "http://129.154.205.7:7191", "http://jetbra.serv00.net:7191", "http://ba.serv00.net:7191"}
 var host = hosts[0]
@@ -34,8 +34,8 @@ var dGreen = "\033[4;32m%s\033[0m\n"
 var red = "\033[31m%s\033[0m\n"
 var defaultColor = "%s"
 var lang, _ = getLocale()
-var deviceID = getMacMD5_241018()
-var machineID = getMacMD5_241019()
+var deviceID = GetMachineID()
+var machineID = GetMachineID()
 var client = Client{Hosts: hosts}
 
 //go:embed all:script
@@ -369,6 +369,16 @@ func getMacMD5_241018() string {
 	return fmt.Sprintf("%x", md5.Sum([]byte(strings.Join(macAddress, ","))))
 }
 func getMacMD5_241019() string {
+	id, err := machineid.ID()
+	if err != nil {
+		return err.Error()
+	}
+	id = strings.ToLower(id)
+	id = strings.ReplaceAll(id, "-", "")
+	return id
+}
+
+func GetMachineID() string {
 	id, err := machineid.ID()
 	if err != nil {
 		return err.Error()
